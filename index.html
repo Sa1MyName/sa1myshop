@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sa1MyShop | Premium Marketplace</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Auth Section -->
+    <div id="auth-section" class="auth-container">
+        <h1 class="auth-logo">Sa1MyShop</h1>
+        <div id="login-form">
+            <h2 style="margin-bottom: 2rem; text-align: center;">Vchod</h2>
+            <input type="text" id="login-username" class="input-field" placeholder="Username (admin / seller / buyer)">
+            <input type="password" id="login-password" class="input-field" placeholder="Password (admin123 / secret)">
+            <button class="btn btn-wb" style="width: 100%; margin-top: 1rem;" onclick="window.handleLogin()">Login</button>
+            <p style="text-align: center; margin-top: 2rem; color: var(--wb-text-light); font-size: 0.9rem;">
+                No account? <a href="#" style="color: var(--wb-purple); font-weight: 700;" onclick="window.toggleAuth(true)">Register</a>
+            </p>
+            <div style="text-align: center; margin-top: 3rem;">
+                <button onclick="localStorage.clear(); sessionStorage.clear(); window.location.reload();" 
+                        style="background: #fee2e2; color: #ef4444; border: 1px solid #fecaca; padding: 0.5rem 1rem; border-radius: 8px; font-size: 0.7rem; font-weight: 800; cursor: pointer;">
+                    NUCLEAR RESET (CLEARS CACHE)
+                </button>
+            </div>
+        </div>
+        <div id="register-form" class="hidden">
+            <h2 style="margin-bottom: 2rem; text-align: center;">Registration</h2>
+            <input type="text" id="reg-username" class="input-field" placeholder="Create Username">
+            <input type="password" id="reg-password" class="input-field" placeholder="Create Password">
+            <select id="reg-role" class="input-field">
+                <option value="buyer">Buyer</option>
+                <option value="seller">Seller</option>
+            </select>
+            <button class="btn btn-wb" style="width: 100%; margin-top: 1rem;" onclick="window.handleRegister()">Register</button>
+            <p style="text-align: center; margin-top: 2rem; color: var(--wb-text-light); font-size: 0.9rem;">
+                Back to <a href="#" style="color: var(--wb-purple); font-weight: 700;" onclick="toggleAuth(false)">Login</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Main Content App -->
+    <div id="app-section" class="hidden">
+        <div id="role-banner" class="role-banner">Sa1MyShop SECURE ARCHIVE v3.5.3 | STATUS: ONLINE</div>
+        
+        <nav>
+            <div class="nav-links">
+                <h1 style="color: var(--wb-purple); font-size: 1.8rem; margin-right: 2rem; cursor: pointer; font-family: 'Montserrat';" onclick="window.switchTab('shop')">Sa1MyShop</h1>
+                <div style="position: relative; display: flex; align-items: center;">
+                    <span style="position: absolute; left: 1.25rem; color: var(--wb-purple-light); font-size: 1.2rem;">🔍</span>
+                    <input type="text" id="search-bar" placeholder="Search for electronics, fashion, and more..." 
+                           style="padding: 0.8rem 1rem 0.8rem 3.5rem; border: 2px solid #f1f5f9; background: #f8fafc; border-radius: 16px; width: 500px; outline: none; transition: 0.3s; font-size: 0.95rem;" 
+                           onfocus="this.style.borderColor='var(--wb-purple-light)'; this.style.background='white'; this.style.boxShadow='0 10px 30px rgba(124, 58, 237, 0.1)';"
+                           onblur="this.style.borderColor='#f1f5f9'; this.style.background='#f8fafc'; this.style.boxShadow='none';"
+                           onkeyup="handleSearch()">
+                </div>
+            </div>
+            <div class="nav-links">
+                <a class="nav-item active" id="nav-shop" onclick="switchTab('shop')">Storefront</a>
+                <a class="nav-item" id="nav-seller" onclick="window.switchTab('seller')">Seller Hub</a>
+                <a class="nav-item" id="nav-admin" onclick="switchTab('admin')">Systems Control</a>
+                <div style="width: 1px; height: 30px; background: #e2e8f0;"></div>
+                <a class="nav-item" onclick="window.toggleCart()" style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="font-size: 1.2rem;">🛒</span>
+                    <span id="cart-count" class="cart-badge">0</span>
+                </a>
+                <a class="nav-item" onclick="handleLogout()" style="color: var(--wb-pink); font-weight: 800; background: #fdf2f8; padding: 0.6rem 1.2rem; border-radius: 99px; transition: 0.3s;">Exit</a>
+            </div>
+        </nav>
+
+        <main id="main-view" class="container">
+            <!-- Dynamic Content -->
+        </main>
+    </div>
+
+    <!-- Right Drawer (Cart/Orders) -->
+    <div id="cart-drawer" class="drawer">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 3rem;">
+            <h2>Ваша корзина</h2>
+            <button class="btn" style="padding: 0.5rem;" onclick="window.toggleCart()">✕</button>
+        </div>
+        <div id="cart-list" style="max-height: 60vh; overflow-y: auto;"></div>
+        <div id="cart-footer" style="position: absolute; bottom: 2rem; left: 2rem; right: 2rem;">
+            <div style="display: flex; justify-content: space-between; font-size: 1.5rem; font-weight: 800; margin-bottom: 2rem;">
+                <span>Итого:</span>
+                <span id="cart-total" style="color: var(--wb-purple); font-family: 'Montserrat';">0 ₽</span>
+            </div>
+            <button class="btn btn-wb" style="width: 100%; border-radius: 12px; padding: 1.25rem;" onclick="window.handleCheckout()">Оформить заказ</button>
+        </div>
+    </div>
+
+    <!-- Health Indicator -->
+    <div id="health-indicator" style="position: fixed; bottom: 1rem; left: 1rem; padding: 0.5rem; background: #ef4444; color: white; font-size: 0.6rem; border-radius: 4px; font-weight: 800; z-index: 9999;">SYSTEM OFFLINE</div>
+
+    <!-- Product Detail Modal Placeholder -->
+    <div id="modal-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
